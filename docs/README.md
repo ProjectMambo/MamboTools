@@ -1,10 +1,10 @@
 # MamboTools
 
 [![CI](https://github.com/ProjectMambo/MamboTools/actions/workflows/ci.yml/badge.svg)](https://github.com/ProjectMambo/MamboTools/actions/workflows/ci.yml)
-[![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-7a5fff.svg)](https://github.com/ProjectMambo/MamboTools)
-[![Rust 1.85+](https://img.shields.io/badge/rust-1.85%2B-orange.svg)](https://www.rust-lang.org/)
-[![Ratatui 0.29](https://img.shields.io/badge/ratatui-0.29-blue.svg)](https://ratatui.rs)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](../LICENSE)
+[![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-7a5fff.svg?style=flat-square)](https://github.com/ProjectMambo/MamboTools)
+[![Rust 1.85+](https://img.shields.io/badge/rust-1.85%2B-orange.svg?style=flat-square)](https://www.rust-lang.org/)
+[![Ratatui 0.29](https://img.shields.io/badge/ratatui-0.29-blue.svg?style=flat-square)](https://ratatui.rs)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](../LICENSE)
 
 MamboTools is the terminal home for Project Mambo repositories. It shows the official catalog, tells users what is installed, and performs clone, fast-forward update, and confirmed removal workflows without requiring repository URLs or Git command knowledge.
 
@@ -38,7 +38,7 @@ MamboTools `0.1.0` supports local installation, fast-forward updates, and confir
 Install the current Git release:
 
 ```bash
-cargo install --git https://github.com/ProjectMambo/MamboTools.git --tag v0.1.0
+cargo install --locked --git https://github.com/ProjectMambo/MamboTools.git --tag v0.1.0
 ```
 
 Then run:
@@ -116,8 +116,8 @@ Run the complete local gate:
 
 ```bash
 cargo fmt --check
-cargo test --all-targets
-cargo clippy --all-targets -- -D warnings
+cargo test --locked --all-targets
+cargo clippy --locked --all-targets -- -D warnings
 cargo build --locked
 ```
 
