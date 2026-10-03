@@ -1,0 +1,22 @@
+[package]
+name = "mambo-tools"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "A terminal manager for Project Mambo repositories"
+license = "MIT"
+repository = "https://github.com/ProjectMambo/MamboTools"
+readme = "README.md"
+keywords = ["ratatui", "terminal", "git", "repository-manager"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+crossterm = "0.28"
+mambo-ui = { git = "https://github.com/ProjectMambo/MamboUI.git", tag = "v0.1.0" }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
