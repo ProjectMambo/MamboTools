@@ -96,7 +96,7 @@ Deletion requires a second keypress, rejects symbolic links and non-Git paths, a
 |---|---|
 | Install and operate MamboTools | [User guide](User%20Guide.md) |
 | Understand safety and implementation boundaries | [Architecture](Architecture.md) |
-| Follow dependency-ordered maintenance and coordination stages | [Development plan](Development%20Plan.md) |
+| Understand long-term maintenance triggers and release gates | [Development plan](Development%20Plan.md) |
 | Browse the public Wiki page | [projectmambo.org/mambotools/](https://projectmambo.org/mambotools/) |
 | Inspect shared terminal components | [MamboUI](https://github.com/ProjectMambo/MamboUI) |
 

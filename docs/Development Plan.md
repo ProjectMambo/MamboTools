@@ -1,5 +1,5 @@
 ---
-description: Dependency-ordered safety, relationship, coordination, and release stages for MamboTools.
+description: Long-term maintenance triggers, safety boundaries, and release gates for MamboTools.
 title: Development plan
 order: 30
 ---
@@ -8,112 +8,78 @@ order: 30
 
 # Development plan
 
-MamboTools is a released local repository manager, not a greenfield package manager. This plan preserves its small, guarded single-repository lifecycle while adding cross-repository awareness only where real Project Mambo provider and consumer relationships require it.
+MamboTools `0.1.0` is a released local repository manager. Feature development is deferred; this plan preserves its safe install, fast-forward update, and confirmed removal paths without inventing an active feature backlog.
 
-The plan is the dependency and acceptance map, not a calendar promise or issue list. Update it when implementation evidence changes a safety boundary, relationship contract, stage order, public behavior, or release gate.
+The plan is trigger-based rather than calendar-based. Update it when a reproduced defect, security advisory, official catalog change, dependency incompatibility, or retirement decision changes the maintenance boundary.
 
 ## Current state
 
-Version `0.1.0` ships a compiled catalog, XDG-aware install-root selection, public HTTPS clone, origin-verified fast-forward update, and confirmed local deletion. `catalog`, `paths`, and `repo` form the tested library boundary; the Ratatui entry point owns selection, status, and confirmation through MamboUI. Git remains an external command and owns transport and credentials.
+The application ships a compiled Project Mambo catalog, resolves an XDG-aware managed root, clones public HTTPS remotes, updates only with `git pull --ff-only`, and removes a local clone only after explicit confirmation. Deletion rejects symbolic links, unexpected origins, unsafe names, and directories Git does not identify as the selected repository root.
 
-The application stores no database, account, background state, or remote catalog. It derives each repository's state from one direct child of the configured root and treats unexpected paths as conflicts. Updates never merge or rewrite history. Deletion rejects symbolic links, unexpected origins, and directories that Git does not identify as the selected repository root.
+`catalog`, `paths`, and `repo` form the tested library boundary. The Ratatui entry point owns selection, status, and confirmation through MamboUI `0.1.0`; Git remains an external command and owns transport and credentials. MamboTools stores no database, account, daemon state, or remote catalog.
 
-The current evidence is the `0.1.0` source and lockfile, focused unit and local-Git tests, synchronized user and architecture guides, and CI formatting, test, Clippy, and locked-build gates. The remaining work begins with observed safety and integration gaps rather than speculative features.
+Current evidence consists of the source and lockfile, 13 focused unit and local-Git tests, synchronized user and architecture guides, and CI gates for formatting, tests, Clippy, and the locked build.
 
-## Target outcome
+## Target maintenance state
 
-MamboTools remains the safe local home for official Project Mambo repositories and can explain their direct relationships, diagnose incompatible or missing local providers, and—only after the read-only model is proven—preview and perform a guarded provider-before-consumer fast-forward sequence.
+Keep the released install, update, refresh, and removal journeys reliable on supported Rust, Git, terminal, and MamboUI versions. Maintenance work should correct demonstrated safety, compatibility, catalog, or documentation problems with the smallest coherent change.
 
-~~~text
-official catalog + declared direct relationships
-                    |
-                    v
-       state and compatibility diagnosis
-                    |
-             explicit preview
-                    |
-                    v
- guarded repository operations -> installed Git worktrees
-~~~
+There is no active expansion milestone. A future feature becomes planned only after repeated user or maintainer evidence establishes the problem, MamboDocs defines any shared contract, and the plan is revised before implementation begins.
 
-Providers continue to own their public contracts and releases. Consumers continue to own their exact pins, semantic adapters, migrations, and validation. MamboTools may order and guard repository operations; it does not infer application mappings or silently rewrite consumer files.
+## Scope, ownership, and deferrals
 
-## Scope and deferrals
-
-The target includes incident-driven hardening of install, update, and deletion; a minimal relationship contract agreed with MamboDocs; deterministic read-only dependency diagnosis; and, after that diagnosis proves useful, explicitly confirmed coordinated local updates with clear stop and recovery behavior.
-
-The target excludes arbitrary third-party catalogs, a remote registry, accounts, cloud state, a daemon, background updates, plugins, operating-system package installation, remote repository deletion, automatic merges or rebases, force operations, semantic configuration edits, automatic dependency-pin changes, release publication, and arbitrary repository scripts. Add remote catalog loading only when manual catalog releases become a measured maintenance problem. Add background work only when measured Git latency makes the synchronous interface unusable.
-
-## Ownership and trust boundaries
+In scope are correctness and security fixes, official catalog additions or retirements, supported dependency and toolchain compatibility, accessibility corrections, documentation accuracy, packaging, and maintenance releases.
 
 | Boundary | Owner and rule |
 |---|---|
-| Catalog, managed root, local state, planning, and confirmations | MamboTools; paths stay below one configured root and mutations fail closed. |
-| Dependency declaration standard | MamboDocs; machine-readable relationships must complement, not scrape, the human README declaration. |
-| Public API and compatibility promise | The provider repository; MamboTools does not reinterpret it. |
-| Version pin, adapter, migration, and consumer tests | The consumer repository; coordination never replaces its validation. |
-| Transport, authentication, remotes, branches, and upstreams | Git and the user's existing configuration; MamboTools does not store credentials. |
-| Installed clone contents | The user; deletion remains explicit and warns that uncommitted and untracked files are removed. |
+| Catalog, managed paths, local-state labels, confirmations, and bounded operations | MamboTools; filesystem and Git mutations fail closed. |
+| Transport, authentication, remotes, branches, and upstreams | Git and the user's existing configuration; MamboTools stores no credentials. |
+| Shared terminal primitives | MamboUI; a provider change is validated and delivered before its MamboTools pin changes. |
+| Installed clone contents | The user; rejected or failed operations preserve them, while confirmed removal clearly warns that the complete local clone is deleted. |
 
-Package names, relationship declarations, filesystem entries, configured remotes, Git output, and repository contents are untrusted input. Diagnostics must not expose credentials or complete sensitive command output. MamboTools runs only its bounded Git operations and never executes commands supplied by a repository.
+Deferred work includes a remote registry, accounts, cloud state, a daemon, background updates, third-party catalogs, plugins, dependency graphs, coordinated multi-repository updates, arbitrary repository scripts, semantic manifest edits, merge or rebase automation, force operations, pushes, releases, and remote deletion. Reconsider any item only after repeated observed failures or requests show that the released single-repository workflow is insufficient.
 
-## Stage 0: Preserve the released baseline
+## Stage 0: Stable hold
 
-The `0.1.0` install, update, refresh, and confirmed-delete journeys are the compatibility baseline. Keep the compiled official catalog and current storage-free model until a later stage demonstrates why either must change. Public key bindings, environment precedence, state labels, origin rules, and destructive confirmation remain stable unless a versioned change includes migration guidance.
+Preserve the current key bindings, environment-variable precedence, one-child managed-path rule, storage-free architecture, exact-origin checks, fast-forward-only updates, destructive confirmation, and terminal restoration. Do not churn code or dependencies without a maintenance trigger.
 
-Exit gate: the locked build and existing tests pass, the documented user journeys match the executable behavior, and no later stage weakens the path, origin, fast-forward, or confirmation checks.
+Exit gate: CI and the documented local gate pass, user documentation matches the executable behavior, and there is no known actionable security or correctness defect in the supported journey.
 
-## Stage 1: Harden the single-repository lifecycle
+## Stage 1: Triggered maintenance
 
-Start from real failures in the current workflow. Extend focused tests around install success and partial failure, dirty or divergent updates, missing upstreams, wrong origins, symbolic links, nested Git roots, deletion failure, Git output bounds, and terminal restoration. A failed operation must leave user-owned content untouched and report the next safe recovery step. Any cleanup of an incomplete clone is limited to a destination that MamboTools proved absent before starting and created for that operation.
+Begin only for a reproduced incident, security advisory, official catalog change, or confirmed Rust, Git, terminal, or MamboUI incompatibility. Reproduce the problem at the lowest owning boundary, make the smallest fix there, and add one focused regression covering success, failure, and recovery where the path can affect user-owned data.
 
-Keep Git as a subprocess and reuse the existing `repo` boundary. Do not add an embedded Git implementation, generic command runner, job framework, or persistent operation store merely to make testing convenient. Record supported platforms from CI evidence rather than promising untested portability.
+Never weaken path, origin, fast-forward, confirmation, or terminal-restoration safeguards to make a failing case pass. Keep Git as a subprocess unless measured evidence proves that this boundary itself is the problem. When MamboUI owns the fix, deliver and validate that provider first, then update MamboTools deliberately.
 
-Exit gate: representative local-Git fixtures prove successful and failed install, update, and deletion paths; destructive rejection tests preserve the target; the terminal restores after normal exit and injected operation errors; and the complete locked gate passes.
+Exit gate: the reproduction fails before the change and passes after it, representative rejection or failure leaves the managed clone intact, affected documentation is current, and the complete repository gate passes.
 
-## Stage 2: Define direct repository relationships
+## Stage 2: Maintenance release
 
-Coordinate with MamboDocs on the smallest versioned, machine-readable declaration needed for real sibling dependencies. Prove it against at least two existing shapes, such as a released provider consumed by an exact version and a provider consumed at an exact commit during coordinated development. The declaration identifies repositories and compatibility expectations; it does not duplicate package-manager lockfiles, semantic mappings, generated artifacts, or maintainer prose.
+Synchronize canonical documentation into MamboTools and MamboWiki, then exercise install, update, rejection, and confirmed removal in a disposable managed root. Version only shipped behavior according to compatibility impact, record the trigger and recovery path in release notes, and publish any provider change before the MamboTools consumer update.
 
-MamboColour is one provider example: it owns its stable roles, ordered colour access, compatibility, and issue-driven adaptability, while MamboSite or MamboDot owns its pin and adapter. MamboTools may report that relationship but does not add colour roles or choose consumer mappings.
+MamboTools has no hidden stored state to migrate. The rollback path is the previous binary or tag, and managed clones remain ordinary Git repositories that users can operate without MamboTools.
 
-Reject unknown schema versions, unsafe repository names, duplicate edges, self-dependencies, cycles, and references outside the official catalog. Do not scrape README tables or accept executable commands in the relationship data.
+Exit gate: a clean environment completes every documented journey, failure cases preserve user-owned data, CI and strict documentation checks pass, repository and Wiki plans match, and the previous release remains available for rollback.
 
-Exit gate: MamboDocs documents the ownership and compatibility rules, provider and consumer fixtures round-trip deterministically, invalid graphs fail with stable diagnostics, and existing repositories without a declaration retain their `0.1.0` behavior.
+## Retirement trigger
 
-## Stage 3: Deliver read-only dependency diagnosis
+If MamboTools is superseded or can no longer be maintained safely, stop claiming active support, document the replacement or ordinary Git fallback, preserve the final source and tag, and archive only after users can continue managing their clones without proprietary state or a destructive migration.
 
-Load declared direct relationships into a deterministic graph and show, for an installed repository, missing providers, installed revisions or versions that do not satisfy the declaration, unsupported schema versions, cycles, and the provider-before-consumer order. Read installed revisions and declared pins without changing a worktree, fetching a remote, or running consumer code.
+Exit gate: the README and Wiki state the final support boundary, replacement or fallback instructions are verified, and no user repository depends on hidden MamboTools state.
 
-Add only the minimum TUI detail needed to answer what is wrong and what should be handled first. Keep independent repositories usable when another declaration is invalid. Bound all displayed paths and Git diagnostics, and keep the existing install state visible.
+## Validation, milestones, and risks
 
-Exit gate: fixtures cover an independent repository, a valid chain, a shared provider, a missing provider, a pin mismatch, a cycle, and an unsupported declaration; repeated scans produce the same order and messages; and diagnosis performs no filesystem or Git mutation.
+Run the complete gate for every maintenance change:
 
-## Stage 4: Add guarded coordinated updates
+```bash
+cargo fmt --check
+cargo test --locked --all-targets
+cargo clippy --locked --all-targets -- -D warnings
+cargo build --locked
+../MamboDocs/script/check-repository.sh --strict .
+git diff --check
+```
 
-Begin this stage only after real use of Stage 3 shows that manual provider-to-consumer ordering causes repeated errors. Before mutation, present the exact repositories, current revisions, intended fast-forward operations, dependency order, and blocking conditions. Require explicit confirmation for the complete plan.
+The meaningful milestones are the released baseline, a triggered maintenance fix, a maintenance release, or retirement. There are no percentage-complete or calendar milestones while feature work is deferred.
 
-Every selected worktree must have the expected origin and a state compatible with fast-forward update. Stop before the first mutation when preflight fails. During execution, stop on the first failure, leave completed fast-forwards intact, and report each repository's previous and current revision plus the safe retry point. Do not reset, stash, discard changes, edit manifests, resolve conflicts, push, merge, publish, or claim atomic rollback across independent Git repositories.
-
-Exit gate: local-remote fixtures prove successful chains, shared providers updated once, preflight rejection without mutation, mid-sequence failure with an accurate recovery report, and a safe retry. The same plan order is shown before and after execution, and single-repository actions remain available.
-
-## Stage 5: Validate and release each milestone
-
-Apply this gate to every milestone; a release is not blocked merely because evidence has correctly deferred Stage 4. Review keyboard-only operation, visible focus, confirmation wording, narrow-terminal behavior, bounded error output, and terminal restoration. Run formatting, all locked tests, strict Clippy, the locked build, strict MamboDocs validation, and the complete documentation synchronization check. Exercise the journeys implemented by the milestone in a disposable root: the baseline covers clean install, independent update, and confirmed deletion; lifecycle confidence adds failed-operation recovery; dependency visibility adds diagnosis; guarded coordination adds rejected and successful sequences.
-
-Version each public behavior change according to its compatibility impact. Publish provider contracts before consumers, synchronize canonical documentation before generated repository and Wiki copies, and retain the previous release as the rollback path. Because MamboTools stores no hidden database, downgrading the binary must leave managed clones usable; any future persistent state requires its own version, migration, backup, and recovery contract before adoption.
-
-Exit gate: a clean environment completes the documented journeys, failure cases preserve user data, CI and documentation gates pass, release notes identify compatibility changes, and the repository and Wiki publish the same plan.
-
-## Milestones and risks
-
-| Milestone | Included stages | Outcome |
-|---|---|---|
-| Released baseline | Stage 0 and its Stage 5 gate | Safe official-repository install, fast-forward update, and confirmed local deletion. |
-| Lifecycle confidence | Stage 1 and its Stage 5 gate | Existing operations have representative failure and recovery evidence. |
-| Dependency visibility | Stages 2 and 3 and their Stage 5 gate | Users can understand provider and consumer state without mutation. |
-| Guarded coordination | Stage 4 and its Stage 5 gate | Proven local update sequences are previewed, confirmed, stopped safely, and released with complete validation. |
-
-The main risks are treating prose as a machine contract, allowing a relationship graph to become a generic package manager, promising atomicity that independent Git worktrees cannot provide, and automating consumer changes that require project-specific judgment. Keep the contract narrow, make diagnosis useful before mutation, and require evidence before Stage 4.
-
-Future complexity also requires evidence. A remote catalog needs repeated catalog-release pain; persistent state needs information that cannot be derived safely; background jobs need measured blocking latency; and a plugin or arbitrary-command system needs a trusted use case that bounded built-in operations cannot satisfy. Until then, leave them out.
+The primary risks are destructive deletion, managing a wrong-origin repository, upstream Rust, Git, terminal, or MamboUI incompatibility, stale catalog entries, and documentation that overstates support. Preserve the current fail-closed boundaries, test the exact incident path, and add complexity only when evidence changes this plan.
