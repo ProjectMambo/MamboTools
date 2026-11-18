@@ -84,7 +84,7 @@ mod tests {
     fn catalog_names_are_unique_and_safe() {
         for (index, package) in PACKAGES.iter().enumerate() {
             assert!(crate::paths::is_safe_package_name(package.name));
-            assert!(!package.summary.is_empty());
+            assert_ne!(package.summary, "");
             assert!(
                 !PACKAGES[..index]
                     .iter()
